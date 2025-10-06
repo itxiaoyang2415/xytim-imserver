@@ -1,0 +1,22 @@
+{
+  "im-platform": {
+    "name": "IM Platform",
+    "jar_file": "im-platform.jar",
+    "container_name": "im-cloud-platform",
+    "internal_port": 8888,
+    "external_port": 18888,
+    "mysql_port": 3306,
+    "redis_port": 6379,
+    "minio_port": 9000,
+    "enabled": true
+  },
+  "im-server": {
+    "name": "IM Server",
+    "jar_file": "im-server.jar",
+    "container_name": "im-cloud-server",
+    "internal_port": 8878,
+    "external_port": 18878,
+    "redis_port": 6379,
+    "enabled": true
+  }
+}

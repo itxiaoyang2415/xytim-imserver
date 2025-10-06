@@ -1,0 +1,45 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4450988 */
+  src: url('iconfont.ttf?t=1710073436458') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-phone-reject:before {
+  content: "\e662";
+}
+
+.icon-phone-accept:before {
+  content: "\e669";
+}
+
+.icon-camera-front:before {
+  content: "\e883";
+}
+
+.icon-camera-back:before {
+  content: "\eb6f";
+}
+
+.icon-speaker-on:before {
+  content: "\e6a4";
+}
+
+.icon-speaker-off:before {
+  content: "\ea3c";
+}
+
+.icon-microphone-on:before {
+  content: "\e63b";
+}
+
+.icon-microphone-off:before {
+  content: "\efe5";
+}
+

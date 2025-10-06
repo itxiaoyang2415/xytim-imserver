@@ -1,0 +1,6 @@
+spring:
+  data:
+    redis:
+      host: im-admin-redis
+      port: 6379 
+

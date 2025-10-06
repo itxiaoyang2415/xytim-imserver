@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bx.implatform.mapper.privacy.GroupVirtualMemberMapper">
+
+    <!-- 获取群组中下一个显示序号 -->
+    <select id="getNextDisplayOrder" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(display_order), 0) + 1
+        FROM t_group_virtual_member
+        WHERE group_id = #{groupId}
+          AND status = 1
+    </select>
+
+    <!-- 批量失效群组成员的虚拟信息 -->
+    <update id="invalidateByGroupId">
+        UPDATE t_group_virtual_member
+        SET status = 2,
+            updated_at = NOW()
+        WHERE group_id = #{groupId}
+          AND status = 1
+    </update>
+
+</mapper>

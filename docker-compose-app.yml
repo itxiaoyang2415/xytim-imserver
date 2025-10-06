@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # IM Platform 后端服务
+  im-platform:
+    build:
+      context: ./im-platform
+      dockerfile: Dockerfile
+    container_name: im-platform-app
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - TZ=Asia/Shanghai
+    networks:
+      - houadmin_im-network
+
+  # IM Server Netty 服务
+  im-server:
+    build:
+      context: ./im-server
+      dockerfile: Dockerfile
+    container_name: im-server-app
+    restart: always
+    ports:
+      - "8878:8878"  # WebSocket 端口
+      - "8879:8879"  # TCP Socket 端口
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - TZ=Asia/Shanghai
+    networks:
+      - houadmin_im-network
+
+# 使用已存在的网络
+networks:
+  houadmin_im-network:
+    external: true
+

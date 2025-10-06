@@ -1,0 +1,100 @@
+version: '3.8'
+
+networks:
+  im-network:
+    driver: bridge
+
+services:
+  # MySQL数据库
+  im-mysql:
+    image: mysql:8.0
+    container_name: im-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: BoxIM@2024!Strong
+      MYSQL_DATABASE: im_platform
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - im-network
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=500
+
+  # Redis缓存
+  im-redis:
+    image: redis:7.0
+    container_name: im-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - im-network
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+
+  # MinIO对象存储
+  im-minio:
+    image: minio/minio:latest
+    container_name: im-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: BoxIMMinio@2024!
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio-data:/data
+    networks:
+      - im-network
+    command: server /data --console-address ":9001"
+
+  # IM Platform服务
+  im-platform:
+    build:
+      context: ./im-platform
+      dockerfile: Dockerfile
+    container_name: im-platform
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: cloud
+      JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+    depends_on:
+      - im-mysql
+      - im-redis
+      - im-minio
+    networks:
+      - im-network
+    volumes:
+      - ./logs/platform:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # IM Server服务
+  im-server:
+    build:
+      context: ./im-server
+      dockerfile: Dockerfile
+    container_name: im-server
+    restart: always
+    ports:
+      - "8878:8878"
+      - "8879:8879"
+    environment:
+      SPRING_PROFILES_ACTIVE: cloud
+      JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC"
+    depends_on:
+      - im-redis
+    networks:
+      - im-network
+    volumes:
+      - ./logs/server:/app/logs

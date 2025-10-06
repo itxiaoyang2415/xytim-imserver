@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://im-admin-mysql:3306/im_platform?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: im-admin-redis
+      port: 6379 
+
+minio:
+  endpoint: http://im-admin-minio:9000
+  domain: http://192.168.0.100:9100
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: box-im
+  imagePath: image
+  filePath: file
+  videoPath: video
+  expireIn: 180
+
+webrtc:
+  max-channel: 9
+  iceServers:
+    - urls: stun:192.168.0.100:3478
+      username: admin
+      credential: admin
+    - urls: turn:192.168.0.100:3478
+      username: admin
+      credential: admin
+
+sms:
+  platform: aliyun
+  access-key: 
+  secret-key: 
+  sign-name: 
+  template-id: 
+
+mail:
+  host: smtp.163.com
+  port: 465
+  ssl: true
+  name: IM Platform
+  from: 
+  pass: 
+  subject: '您收到一条注册验证码'
+  content: '您正在注册盒子IM账号,验证码为:  ${code} ,有效期为5分钟'
+
+registration:
+  mode:
+    - username
+
