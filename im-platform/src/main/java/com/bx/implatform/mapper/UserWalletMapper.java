@@ -73,5 +73,18 @@ public interface UserWalletMapper extends BaseMapper<UserWallet> {
     int unfreezeBalance(@Param("userId") Long userId,
                        @Param("amount") BigDecimal amount,
                        @Param("version") Integer version);
+
+    /**
+     * 解冻金额并扣减余额（使用乐观锁）
+     * 用于转账领取：同时减少冻结金额和可用余额
+     *
+     * @param userId 用户ID
+     * @param amount 金额
+     * @param version 版本号
+     * @return 更新行数
+     */
+    int unfreezeAndDeductBalance(@Param("userId") Long userId,
+                                 @Param("amount") BigDecimal amount,
+                                 @Param("version") Integer version);
 }
 

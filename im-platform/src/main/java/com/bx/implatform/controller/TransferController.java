@@ -1,6 +1,7 @@
 package com.bx.implatform.controller;
 
 import com.bx.implatform.annotation.RepeatSubmit;
+import com.bx.implatform.dto.ReceiveTransferDTO;
 import com.bx.implatform.dto.TransferDTO;
 import com.bx.implatform.result.Result;
 import com.bx.implatform.result.ResultUtils;
@@ -29,16 +30,24 @@ public class TransferController {
 
     @RepeatSubmit
     @PostMapping("/send")
-    @Operation(summary = "转账", description = "向其他用户转账")
+    @Operation(summary = "发送转账", description = "向其他用户转账，需对方领取")
     public Result<TransferVO> transfer(@Valid @RequestBody TransferDTO dto) {
         TransferVO vo = transferService.transfer(dto);
         return ResultUtils.success(vo);
     }
 
-    @GetMapping("/detail/{transactionNo}")
-    @Operation(summary = "查询转账详情", description = "根据交易流水号查询转账详情")
-    public Result<TransferVO> getTransferDetail(@PathVariable String transactionNo) {
-        TransferVO vo = transferService.getTransferDetail(transactionNo);
+    @RepeatSubmit
+    @PostMapping("/receive")
+    @Operation(summary = "领取转账", description = "领取别人发送的转账")
+    public Result<TransferVO> receiveTransfer(@Valid @RequestBody ReceiveTransferDTO dto) {
+        TransferVO vo = transferService.receiveTransfer(dto);
+        return ResultUtils.success(vo);
+    }
+
+    @GetMapping("/detail/{transferNo}")
+    @Operation(summary = "查询转账详情", description = "根据转账编号查询转账详情")
+    public Result<TransferVO> getTransferDetail(@PathVariable String transferNo) {
+        TransferVO vo = transferService.getTransferDetail(transferNo);
         return ResultUtils.success(vo);
     }
 }

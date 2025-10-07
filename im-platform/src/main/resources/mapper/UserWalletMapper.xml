@@ -61,4 +61,18 @@
           AND version = #{version}
     </update>
 
+    <!-- 解冻金额并扣减余额（用于转账领取） -->
+    <update id="unfreezeAndDeductBalance">
+        UPDATE t_user_wallet
+        SET frozen_balance = frozen_balance - #{amount},
+            balance = balance - #{amount},
+            version = version + 1,
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+          AND frozen_balance >= #{amount}
+          AND balance >= #{amount}
+          AND version = #{version}
+          AND wallet_status = 1
+    </update>
+
 </mapper>
